@@ -1,0 +1,5 @@
+allowBuilds:
+  unrs-resolver: false
+# Avoid an automatic reinstall when the desktop host and sandbox see different stores.
+verifyDepsBeforeRun: warn
+enableGlobalVirtualStore: false

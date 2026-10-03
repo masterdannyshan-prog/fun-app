@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "Little Days",
+    "slug": "little-days",
+    "scheme": "little-days",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/little-days-icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F7F5EE",
+        "foregroundImage": "./assets/little-days-icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/little-days-favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose a photo for your daily memory.",
+          "cameraPermission": "Take a photo for your daily memory.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Record a voice note for your daily memory.",
+          "enableBackgroundPlayback": false,
+          "enableBackgroundRecording": false
+        }
+      ],
+      "expo-sharing",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Take a photo for your daily memory.",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "expo-local-authentication",
+        { "faceIDPermission": "Open your private Little Days sketchbook." }
+      ],
+      "expo-notifications"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<rect width="1024" height="1024" rx="210" fill="#F7F5EE"/>
+<path d="M172 258 Q346 228 514 296 Q679 228 850 262 L838 738 Q669 694 510 786 Q346 704 177 753Z" fill="#C8DCE5" stroke="#202236" stroke-width="13" stroke-linejoin="round"/>
+<path d="M520 304 Q682 245 835 275 L826 725 Q665 683 522 768Z" fill="#DCEAAE"/>
+<path d="M514 296 Q500 505 510 786 M184 747 Q337 699 508 779 Q674 690 833 732" fill="none" stroke="#202236" stroke-width="12" stroke-linecap="round"/>
+<path d="M489 776 L481 873 L529 842 L562 871 L554 771" fill="#3530C8"/>
+<g fill="none" stroke="#202236" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+<path d="M218 539 Q289 399 350 440 Q383 467 355 490 Q335 466 315 521 Q303 588 371 555 Q412 516 459 523 M231 615 Q337 585 437 620"/>
+<path d="M666 369 C603 368 603 473 666 474 C732 470 729 369 666 369Z M666 324 L667 344 M664 501 L665 526 M576 422 L599 423 M735 421 L758 420 M599 356 L615 371 M715 478 L733 497 M600 493 L617 474 M718 371 L736 350"/>
+<path d="M574 628 Q634 599 677 615 Q728 647 789 613 M586 681 Q681 649 784 673"/>
+</g></svg>
