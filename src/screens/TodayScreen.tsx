@@ -21,6 +21,7 @@ import Svg, { Path } from 'react-native-svg';
 import { router, useFocusEffect, useNavigation, type Href } from 'expo-router';
 import { InkRule, InkSurface, PaperGrain } from '../components/InkSurface';
 import { MediaButton, VoicePlayback, VoiceRecorder } from '../components/JournalMedia';
+import { DoodleDrawing } from '../components/DoodleDrawing';
 import { SketchIcon } from '../components/SketchIcon';
 import { back, Field, IconButton, LinkText, TabBar, ui } from '../components/SketchUI';
 import { useJournal } from '../hooks/useJournal';
@@ -231,11 +232,12 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
             </View>
           </View>
 
-          <InkSurface
-            style={[styles.note, compact && { paddingTop: 16, paddingBottom: 8 }]}
-            radius={24}
-            stroke={focused ? colors.cobalt : colors.ink}
-            strokeWidth={1.5}
+          <View
+            style={[
+              styles.note,
+              focused && styles.noteFocused,
+              compact && { paddingTop: 16, paddingBottom: 8 },
+            ]}
           >
             <Text
               nativeID="memory-label"
@@ -348,7 +350,7 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
                 <Text style={styles.smallText}>adding your photo...</Text>
               </View>
             ) : null}
-          </InkSurface>
+          </View>
 
           {editing ? (
             <View style={{ marginTop: 22 }}>
@@ -405,6 +407,17 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
               >
                 use my mood doodle
               </LinkText>
+              <Text style={[ui.body, { marginTop: 14, marginBottom: 8 }]}>or draw your own</Text>
+              <DoodleDrawing
+                value={draft.customDoodle}
+                disabled={controlsDisabled}
+                onChange={(customDoodle) =>
+                  setDraft((previous) => ({
+                    ...previous,
+                    customDoodle: customDoodle.length ? customDoodle : undefined,
+                  }))
+                }
+              />
             </View>
           ) : (
             <View style={[styles.weekSection, compact && { marginTop: 14 }]}>
@@ -606,7 +619,16 @@ const styles = StyleSheet.create({
     maxWidth: '100%',
     textAlign: 'center',
   },
-  note: { paddingHorizontal: 23, paddingTop: 20, paddingBottom: 12 },
+  note: {
+    paddingHorizontal: 23,
+    paddingTop: 20,
+    paddingBottom: 12,
+    borderWidth: 1.5,
+    borderColor: colors.ink,
+    borderRadius: 24,
+    backgroundColor: '#FFFDF6',
+  },
+  noteFocused: { borderColor: colors.cobalt, borderWidth: 2 },
   noteLabel: {
     fontFamily: fonts.mono,
     fontSize: 14,
@@ -621,6 +643,8 @@ const styles = StyleSheet.create({
     color: colors.ink,
     padding: 0,
     margin: 0,
+    borderWidth: 0,
+    outlineStyle: 'none' as never,
     minHeight: 84,
   },
   mediaRow: {

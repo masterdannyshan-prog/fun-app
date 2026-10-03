@@ -51,6 +51,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "export": "expo export --platform all",
+    "export:web": "expo export --platform web",
     "preview": "node scripts/serve-preview.cjs 8082",
     "verify": "node scripts/verify-app.cjs playwright http://127.0.0.1:8082",
     "format": "prettier --write src scripts tests app.json package.json"

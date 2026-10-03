@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 import { InkSurface } from '../components/InkSurface';
 import { SketchIcon } from '../components/SketchIcon';
+import { DoodleMark } from '../components/DoodleDrawing';
 import { Empty, IconButton, Page, ui } from '../components/SketchUI';
 import { dayDate, localDay, monthDays, STORAGE_PREFIX } from '../lib/journal';
 import { useSketchbook } from '../state/Sketchbook';
@@ -127,7 +128,11 @@ export default function YearScreen() {
                     </Text>
                     <View style={{ alignSelf: 'center', marginTop: 6 }}>
                       {entry && mood ? (
-                        <SketchIcon name={entry.doodle ?? mood.icon} size={32} />
+                        entry.customDoodle?.length ? (
+                          <DoodleMark paths={entry.customDoodle} size={37} />
+                        ) : (
+                          <SketchIcon name={entry.doodle ?? mood.icon} size={32} />
+                        )
                       ) : (
                         <Text style={ui.small}>{book.records[day] ? '·' : ''}</Text>
                       )}

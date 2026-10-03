@@ -23,6 +23,7 @@ export type JournalDraft = {
   voice: VoiceNote | null;
   tags?: string[];
   doodle?: Doodle;
+  customDoodle?: string[];
 };
 export type JournalEntry = JournalDraft & { date: string; savedAt: string };
 export type JournalRecord = { version: 1; draft: JournalDraft; saved: JournalEntry | null };
@@ -69,6 +70,12 @@ function isDraft(value: unknown): value is JournalDraft {
         draft.tags.length <= 8 &&
         draft.tags.every((tag) => typeof tag === 'string' && tag.length <= 30))) &&
     (draft.doodle === undefined || doodles.includes(draft.doodle)) &&
+    (draft.customDoodle === undefined ||
+      (Array.isArray(draft.customDoodle) &&
+        draft.customDoodle.length <= 40 &&
+        draft.customDoodle.every(
+          (path) => typeof path === 'string' && path.length > 0 && path.length <= 4000,
+        ))) &&
     (draft.voice === null ||
       (isAttachment(draft.voice) &&
         typeof draft.voice.duration === 'number' &&
@@ -99,7 +106,8 @@ export function sameDraft(a: JournalDraft, b: JournalDraft): boolean {
     JSON.stringify(a.photos) === JSON.stringify(b.photos) &&
     JSON.stringify(a.voice) === JSON.stringify(b.voice) &&
     JSON.stringify(a.tags ?? []) === JSON.stringify(b.tags ?? []) &&
-    a.doodle === b.doodle
+    a.doodle === b.doodle &&
+    JSON.stringify(a.customDoodle ?? []) === JSON.stringify(b.customDoodle ?? [])
   );
 }
 

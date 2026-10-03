@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { router, type Href } from 'expo-router';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { InkSurface } from '../components/InkSurface';
 import { SketchIcon } from '../components/SketchIcon';
 import { Empty, IconButton, MemoryCard, Notice, Page, ui } from '../components/SketchUI';
@@ -41,7 +41,7 @@ export default function SearchScreen() {
   }
   return (
     <Page title="find a day" error={book.error}>
-      <InkSurface radius={13} style={[ui.row, { paddingHorizontal: 13, paddingVertical: 4 }]}>
+      <View style={[ui.row, styles.searchShell]}>
         <SketchIcon name="search" size={27} />
         <TextInput
           accessibilityLabel="Search memories"
@@ -55,12 +55,12 @@ export default function SearchScreen() {
           }}
           onSubmitEditing={() => void remember()}
           returnKeyType="search"
-          style={[ui.body, { flex: 1, minHeight: 48 }]}
+          style={[ui.body, styles.searchInput]}
         />
         {query ? (
           <IconButton icon="close" label="Clear search" onPress={() => setQuery('')} />
         ) : null}
-      </InkSurface>
+      </View>
       <View style={{ flexDirection: 'row', gap: 8, marginTop: 21 }}>
         {(
           [
@@ -212,3 +212,7 @@ export default function SearchScreen() {
     </Page>
   );
 }
+const styles = StyleSheet.create({
+  searchShell: { paddingHorizontal: 13, paddingVertical: 4, borderWidth: 1.5, borderColor: colors.ink, borderRadius: 13, backgroundColor: '#FFFDF6' },
+  searchInput: { flex: 1, minHeight: 48, padding: 0, margin: 0, borderWidth: 0, outlineStyle: 'none' as never },
+});

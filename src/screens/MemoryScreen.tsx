@@ -3,6 +3,7 @@ import { Image, Modal, Pressable, Text, View } from 'react-native';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { InkSurface } from '../components/InkSurface';
 import { SketchIcon } from '../components/SketchIcon';
+import { DoodleMark } from '../components/DoodleDrawing';
 import { VoicePlayback } from '../components/JournalMedia';
 import {
   Confirm,
@@ -79,7 +80,11 @@ export default function MemoryScreen() {
             transform: [{ rotate: '-3deg' }],
           }}
         >
-          <SketchIcon name={entry.doodle ?? mood.icon} size={89} />
+          {entry.customDoodle?.length ? (
+            <DoodleMark paths={entry.customDoodle} size={102} />
+          ) : (
+            <SketchIcon name={entry.doodle ?? mood.icon} size={89} />
+          )}
         </InkSurface>
         <Text style={[ui.body, { marginTop: 8 }]}>{entry.mood}</Text>
       </View>

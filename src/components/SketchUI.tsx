@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ReactNode } from 'react';
 import { InkRule, InkSurface, PaperGrain } from './InkSurface';
 import { SketchIcon, type SketchIconName } from './SketchIcon';
+import { DoodleMark } from './DoodleDrawing';
 import { colors, fonts, moods } from '../theme';
 import { dayDate, type JournalEntry } from '../lib/journal';
 
@@ -288,18 +289,28 @@ export function Field({ label, ...props }: TextInputProps & { label: string }) {
   return (
     <View style={{ marginBottom: 16 }}>
       <Text style={[ui.small, { color: colors.ink, marginBottom: 6 }]}>{label}</Text>
-      <InkSurface radius={12} style={{ padding: 13 }}>
+      <View style={fieldStyles.shell}>
         <TextInput
           {...props}
           accessibilityLabel={label}
           placeholderTextColor={colors.muted}
           selectionColor={colors.cobalt}
-          style={[ui.body, { minHeight: 26, padding: 0 }, props.style]}
+          style={[ui.body, fieldStyles.input, props.style]}
         />
-      </InkSurface>
+      </View>
     </View>
   );
 }
+const fieldStyles = StyleSheet.create({
+  shell: {
+    borderWidth: 1.5,
+    borderColor: colors.ink,
+    borderRadius: 12,
+    backgroundColor: '#FFFDF6',
+    padding: 13,
+  },
+  input: { minHeight: 26, padding: 0, margin: 0, borderWidth: 0, outlineStyle: 'none' as never },
+});
 export function Empty({
   title,
   body,
@@ -342,7 +353,11 @@ export function MemoryCard({ entry, onPress }: { entry: JournalEntry; onPress?: 
           radius={13}
           style={{ width: 66, height: 76, alignItems: 'center', justifyContent: 'center' }}
         >
-          <SketchIcon name={entry.doodle ?? mood.icon} size={49} />
+          {entry.customDoodle?.length ? (
+            <DoodleMark paths={entry.customDoodle} size={56} />
+          ) : (
+            <SketchIcon name={entry.doodle ?? mood.icon} size={49} />
+          )}
         </InkSurface>
         <View style={{ flex: 1, gap: 4 }}>
           <Text style={ui.small}>
