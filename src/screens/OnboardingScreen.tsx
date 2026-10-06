@@ -7,13 +7,16 @@ import { SketchIcon } from '../components/SketchIcon';
 import { InkButton, LinkText, Notice, Page, ui } from '../components/SketchUI';
 import { useSketchbook } from '../state/Sketchbook';
 import { colors, fonts } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 export default function OnboardingScreen() {
   const book = useSketchbook();
   const { width } = useWindowDimensions();
-  const narrow = width < 360;
+  const { narrow, short, veryShort } = useResponsive();
   const iconSize = narrow ? 56 : 65;
   const iconHeight = narrow ? 64 : 74;
+  const sectionGap = veryShort ? 10 : short ? 14 : 28;
+  const iconGap = narrow ? 10 : 14;
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   async function begin() {
@@ -33,18 +36,18 @@ export default function OnboardingScreen() {
         accessibilityRole="header"
         style={{
           fontFamily: fonts.handLight,
-          fontSize: narrow ? 38 : 42,
-          lineHeight: narrow ? 49 : 54,
+          fontSize: veryShort ? 34 : short ? 37 : narrow ? 38 : 42,
+          lineHeight: veryShort ? 43 : short ? 47 : narrow ? 49 : 54,
           color: colors.ink,
           textAlign: 'center',
         }}
       >
         a little place{'\n'}for your days
       </Text>
-      <Text style={[ui.body, ui.center, { marginTop: 14, marginBottom: narrow ? 20 : 28 }]}>
+      <Text style={[ui.body, ui.center, { marginTop: veryShort ? 6 : short ? 10 : 14, marginBottom: veryShort ? 12 : short ? 16 : narrow ? 20 : 28 }]}>
         one memory. one tiny sketch. every day.
       </Text>
-      <View style={{ flexDirection: 'row', gap: 14, justifyContent: 'center' }}>
+      <View style={{ flexDirection: 'row', gap: iconGap, justifyContent: 'center' }}>
         {(['mug', 'sun', 'headphones', 'shoe'] as const).map((icon, index) => (
           <InkSurface
             key={icon}
@@ -64,8 +67,8 @@ export default function OnboardingScreen() {
           </InkSurface>
         ))}
       </View>
-      <View style={{ alignItems: 'center', marginVertical: narrow ? 18 : 28 }}>
-        <Svg width="100%" height={narrow ? 150 : 185} viewBox="0 0 360 200" aria-hidden>
+      <View style={{ alignItems: 'center', marginVertical: sectionGap }}>
+        <Svg width="100%" height={veryShort ? 115 : short ? 135 : narrow ? 150 : 185} viewBox="0 0 360 200" aria-hidden>
           <Path
             d="M18 39 Q103 18 179 49 Q252 18 341 35 L338 172 Q249 150 179 184 Q105 156 20 179 Z"
             fill={colors.paper}
@@ -106,7 +109,7 @@ export default function OnboardingScreen() {
           { icon: 'lock', text: 'on your device. yours to keep.' },
         ] as const
       ).map((item) => (
-        <View key={item.text} style={[ui.row, { marginBottom: 14 }]}>
+        <View key={item.text} style={[ui.row, { marginBottom: veryShort ? 5 : short ? 8 : 14 }]}>
           <SketchIcon name={item.icon} size={30} />
           <Text style={[ui.body, { flex: 1 }]}>{item.text}</Text>
         </View>
