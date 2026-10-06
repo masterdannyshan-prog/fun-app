@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { InkSurface } from '../components/InkSurface';
@@ -10,6 +10,10 @@ import { colors, fonts } from '../theme';
 
 export default function OnboardingScreen() {
   const book = useSketchbook();
+  const { width } = useWindowDimensions();
+  const narrow = width < 360;
+  const iconSize = narrow ? 56 : 65;
+  const iconHeight = narrow ? 64 : 74;
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   async function begin() {
@@ -29,15 +33,15 @@ export default function OnboardingScreen() {
         accessibilityRole="header"
         style={{
           fontFamily: fonts.handLight,
-          fontSize: 42,
-          lineHeight: 54,
+          fontSize: narrow ? 38 : 42,
+          lineHeight: narrow ? 49 : 54,
           color: colors.ink,
           textAlign: 'center',
         }}
       >
         a little place{'\n'}for your days
       </Text>
-      <Text style={[ui.body, ui.center, { marginTop: 18, marginBottom: 28 }]}>
+      <Text style={[ui.body, ui.center, { marginTop: 14, marginBottom: narrow ? 20 : 28 }]}>
         one memory. one tiny sketch. every day.
       </Text>
       <View style={{ flexDirection: 'row', gap: 14, justifyContent: 'center' }}>
@@ -49,8 +53,8 @@ export default function OnboardingScreen() {
             radius={14}
             grain
             style={{
-              width: 65,
-              height: 74,
+              width: iconSize,
+              height: iconHeight,
               alignItems: 'center',
               justifyContent: 'center',
               transform: [{ rotate: `${index % 2 ? 5 : -4}deg` }],
@@ -60,8 +64,8 @@ export default function OnboardingScreen() {
           </InkSurface>
         ))}
       </View>
-      <View style={{ alignItems: 'center', marginVertical: 28 }}>
-        <Svg width="100%" height={185} viewBox="0 0 360 200" aria-hidden>
+      <View style={{ alignItems: 'center', marginVertical: narrow ? 18 : 28 }}>
+        <Svg width="100%" height={narrow ? 150 : 185} viewBox="0 0 360 200" aria-hidden>
           <Path
             d="M18 39 Q103 18 179 49 Q252 18 341 35 L338 172 Q249 150 179 184 Q105 156 20 179 Z"
             fill={colors.paper}
