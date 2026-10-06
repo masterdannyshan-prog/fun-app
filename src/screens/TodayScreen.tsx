@@ -37,9 +37,10 @@ const example = 'golden light on the walk home.\ni stopped for a minute and just
 export function TodayScreen({ day, editing = false }: { day: string; editing?: boolean }) {
   const book = useSketchbook();
   const insets = useSafeAreaInsets();
-  const { fontScale, height } = useWindowDimensions();
+  const { fontScale, height, width } = useWindowDimensions();
   const largeText = fontScale > 1.3;
-  const compact = height < 830 && !largeText;
+  const narrow = width < 360;
+  const compact = (height < 830 || narrow) && !largeText;
   const journal = useJournal(day);
   const { draft, setDraft } = journal;
   const [message, setMessage] = useState('');
@@ -133,6 +134,9 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
   }
 
   const feedback = journal.error || message;
+  const responsiveContentPadding = narrow ? 14 : 19;
+  const responsiveStampHeight = narrow ? 76 : 84;
+  const responsiveTitleSize = narrow ? 58 : compact ? 60 : 66;
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <PaperGrain />
@@ -142,7 +146,7 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
       >
         <ScrollView
           style={styles.scroll}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[styles.content, { paddingHorizontal: responsiveContentPadding }]}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}
@@ -163,7 +167,7 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
                 accessibilityRole="header"
                 style={[
                   styles.title,
-                  compact && { fontSize: 60, lineHeight: 74 },
+                  { fontSize: responsiveTitleSize, lineHeight: narrow ? 72 : compact ? 74 : 86 },
                   editing && { fontSize: 48 },
                 ]}
               >
@@ -188,7 +192,11 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
               {editing ? 'how did this day feel?' : 'how did today feel?'}
             </Text>
             <View
-              style={[styles.moodRow, largeText && styles.moodRowLarge]}
+              style={[
+                styles.moodRow,
+                largeText && styles.moodRowLarge,
+                narrow && { gap: 6 },
+              ]}
               accessibilityRole="radiogroup"
               accessibilityLabel="How did today feel?"
             >
@@ -217,14 +225,14 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
                   ]}
                 >
                   <InkSurface
-                    style={styles.moodStamp}
+                    style={[styles.moodStamp, { height: responsiveStampHeight }]}
                     fill={mood.color}
                     radius={20}
                     grain
                     stroke={draft.mood === mood.id ? colors.cobalt : 'none'}
                     strokeWidth={2.4}
                   >
-                    <SketchIcon name={mood.icon} size={61} />
+                    <SketchIcon name={mood.icon} size={narrow ? 54 : 61} />
                   </InkSurface>
                   <Text style={styles.moodLabel}>{mood.label}</Text>
                 </Pressable>
@@ -476,6 +484,7 @@ export function TodayScreen({ day, editing = false }: { day: string; editing?: b
             }}
             style={({ pressed }) => [
               styles.saveWrap,
+              { width: narrow ? '94%' : '82%' },
               compact && { marginTop: 12 },
               pressed && styles.pressed,
               (!journal.ready || mediaBusy || voiceBusy) && styles.dimmed,
@@ -692,7 +701,7 @@ const styles = StyleSheet.create({
   weekLetter: { fontFamily: fonts.hand, fontSize: 17, lineHeight: 25, color: colors.ink },
   weekTile: { width: '100%', height: 49, justifyContent: 'center', alignItems: 'center' },
   dash: { fontFamily: fonts.hand, color: colors.ink, fontSize: 22 },
-  saveWrap: { marginTop: 16, alignSelf: 'center', width: '82%' },
+  saveWrap: { marginTop: 16, alignSelf: 'center', width: '82%', maxWidth: 360 },
   saveButton: {
     minHeight: 57,
     flexDirection: 'row',
