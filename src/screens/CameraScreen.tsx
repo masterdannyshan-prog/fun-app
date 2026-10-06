@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { Image, Linking, Platform, Pressable, Text, View } from 'react-native';
+import { Image, Linking, Platform, Pressable, Text, View, useWindowDimensions } from 'react-native';
 import {
   CameraView,
   useCameraPermissions,
@@ -21,6 +21,14 @@ export default function CameraScreen() {
   const day = validDay(requested ?? '') && requested! <= localDay() ? requested! : localDay();
   const book = useSketchbook();
   const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
+  const compact = height < 700 || width < 360;
+  const cameraHorizontalPadding = width < 360 ? 16 : 24;
+  const bottomHorizontalPadding = width < 360 ? 16 : 26;
+  const cameraTopPadding = compact ? 12 : 24;
+  const cameraBottomPadding = compact ? 8 : 16;
+  const cameraMinHeight = compact ? 120 : 180;
+  const cameraHeaderSize = compact ? 38 : 43;
   const camera = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>('back');
@@ -148,12 +156,15 @@ export default function CameraScreen() {
     >
       <PaperGrain />
       <View
-        style={[ui.row, { paddingHorizontal: 16, paddingTop: 16, justifyContent: 'space-between' }]}
+        style={[
+          ui.row,
+          { paddingHorizontal: width < 360 ? 8 : 16, paddingTop: compact ? 8 : 16, justifyContent: 'space-between' },
+        ]}
       >
         <IconButton icon="close" label="Close camera" onPress={back} disabled={busy} />
         <Text
           accessibilityRole="header"
-          style={{ fontFamily: fonts.handLight, fontSize: 43, color: colors.ink }}
+          style={{ fontFamily: fonts.handLight, fontSize: cameraHeaderSize, color: colors.ink }}
         >
           camera
         </Text>
@@ -164,12 +175,12 @@ export default function CameraScreen() {
           disabled={busy || Platform.OS === 'web' || !!captured}
         />
       </View>
-      <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 24 }}>
+      <View style={{ flex: 1, paddingHorizontal: cameraHorizontalPadding, paddingTop: cameraTopPadding, minHeight: cameraMinHeight }}>
         <InkSurface
           radius={25}
           stroke={colors.cobalt}
           strokeWidth={1.8}
-          style={{ flex: 1, padding: 5, minHeight: 180 }}
+          style={{ flex: 1, padding: 5, minHeight: cameraMinHeight }}
         >
           {captured ? (
             <Image
@@ -211,7 +222,7 @@ export default function CameraScreen() {
           )}
         </InkSurface>
       </View>
-      <View style={{ paddingHorizontal: 26, paddingTop: 12 }}>
+      <View style={{ paddingHorizontal: bottomHorizontalPadding, paddingTop: cameraBottomPadding }}>
         <Notice message={message} />
         {captured ? (
           <>
@@ -230,7 +241,7 @@ export default function CameraScreen() {
           </>
         ) : (
           <>
-            <View style={[ui.row, { justifyContent: 'space-around', paddingVertical: 16 }]}>
+            <View style={[ui.row, { justifyContent: 'space-around', paddingVertical: compact ? 8 : 16 }]}>
               <Text style={ui.body}>1×</Text>
               <Pressable
                 accessibilityRole="button"
