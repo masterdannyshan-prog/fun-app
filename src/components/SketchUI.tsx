@@ -19,6 +19,7 @@ import { InkRule, InkSurface, PaperGrain } from './InkSurface';
 import { SketchIcon, type SketchIconName } from './SketchIcon';
 import { DoodleMark } from './DoodleDrawing';
 import { colors, fonts, moods } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 import { dayDate, type JournalEntry } from '../lib/journal';
 
 export const ui = StyleSheet.create({
@@ -141,10 +142,14 @@ export function Page({
 }) {
   const insets = useSafeAreaInsets();
   const { width, fontScale } = useWindowDimensions();
-  const narrow = width < 360;
+  const { narrow, short, veryShort } = useResponsive();
   const horizontalPadding = narrow ? 16 : width < 420 ? 20 : 22;
-  const titleSize = title.length > 15 ? (narrow ? 34 : 38) : (narrow ? 46 : 52);
-  const titleLineHeight = title.length > 15 ? (narrow ? 46 : 52) : (narrow ? 58 : 70);
+  const titleSize = title.length > 15
+    ? (narrow ? 34 : short ? 36 : 38)
+    : (narrow ? 46 : short ? 48 : 52);
+  const titleLineHeight = title.length > 15
+    ? (narrow ? 46 : short ? 48 : 52)
+    : (narrow ? 58 : short ? 62 : 70);
   return (
     <View style={{ flex: 1, backgroundColor: colors.paper, paddingTop: insets.top }}>
       <PaperGrain />
@@ -155,13 +160,13 @@ export function Page({
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: horizontalPadding,
-            paddingTop: narrow ? 12 : 18,
-            paddingBottom: 28 + Math.max(0, insets.bottom),
+            paddingTop: veryShort ? 8 : short ? 12 : 18,
+            paddingBottom: 20 + Math.max(0, insets.bottom),
           }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: veryShort ? 2 : short ? 5 : 8 }}>
             {!tabs ? <IconButton icon="back" label="Go back" onPress={back} /> : null}
             <View style={{ flex: 1, alignItems: 'center' }}>
               <Text
@@ -189,8 +194,8 @@ export function Page({
                 ui.body,
                 ui.center,
                 {
-                  marginTop: narrow ? 8 : 14,
-                  marginBottom: narrow ? 18 : 24,
+                  marginTop: veryShort ? 4 : short ? 6 : 14,
+                  marginBottom: veryShort ? 10 : short ? 14 : 24,
                   maxWidth: width - horizontalPadding * 2,
                   alignSelf: 'center',
                 },
@@ -201,7 +206,7 @@ export function Page({
               {subtitle}
             </Text>
           ) : (
-            <View style={{ height: 22 }} />
+            <View style={{ height: veryShort ? 10 : short ? 14 : 22 }} />
           )}
           {error ? <Notice message={error} error /> : null}
           {children}
