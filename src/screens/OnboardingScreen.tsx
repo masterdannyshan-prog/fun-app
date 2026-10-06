@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Text, View } from 'react-native';
 import { router } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { InkSurface } from '../components/InkSurface';
@@ -11,7 +11,6 @@ import { useResponsive } from '../hooks/useResponsive';
 
 export default function OnboardingScreen() {
   const book = useSketchbook();
-  const { width } = useWindowDimensions();
   const { narrow, short, veryShort } = useResponsive();
   const iconSize = narrow ? 56 : 65;
   const iconHeight = narrow ? 64 : 74;
