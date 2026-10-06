@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
   type TextInputProps,
 } from 'react-native';
@@ -65,6 +66,7 @@ export function back() {
 export function TabBar({ disabled = false }: { disabled?: boolean }) {
   const path = usePathname();
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const tabs = [
     { title: 'today', href: '/', icon: 'home' },
     { title: 'year', href: '/year', icon: 'calendar' },
@@ -75,7 +77,7 @@ export function TabBar({ disabled = false }: { disabled?: boolean }) {
     <View
       style={{
         backgroundColor: colors.paper,
-        paddingHorizontal: 10,
+        paddingHorizontal: width < 360 ? 4 : 10,
         paddingBottom: Math.max(10, insets.bottom),
       }}
     >
@@ -138,6 +140,11 @@ export function Page({
   error?: string;
 }) {
   const insets = useSafeAreaInsets();
+  const { width, fontScale } = useWindowDimensions();
+  const narrow = width < 360;
+  const horizontalPadding = narrow ? 16 : width < 420 ? 20 : 22;
+  const titleSize = title.length > 15 ? (narrow ? 34 : 38) : (narrow ? 46 : 52);
+  const titleLineHeight = title.length > 15 ? (narrow ? 46 : 52) : (narrow ? 58 : 70);
   return (
     <View style={{ flex: 1, backgroundColor: colors.paper, paddingTop: insets.top }}>
       <PaperGrain />
@@ -146,7 +153,11 @@ export function Page({
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView
-          contentContainerStyle={{ paddingHorizontal: 22, paddingTop: 18, paddingBottom: 28 }}
+          contentContainerStyle={{
+            paddingHorizontal: horizontalPadding,
+            paddingTop: narrow ? 12 : 18,
+            paddingBottom: 28 + Math.max(0, insets.bottom),
+          }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -157,10 +168,11 @@ export function Page({
                 accessibilityRole="header"
                 style={{
                   fontFamily: fonts.handLight,
-                  fontSize: title.length > 15 ? 38 : 52,
-                  lineHeight: 70,
+                  fontSize: titleSize,
+                  lineHeight: titleLineHeight,
                   color: colors.ink,
                   textAlign: 'center',
+                  maxWidth: width - horizontalPadding * 2 - 96,
                 }}
               >
                 {title}
@@ -172,7 +184,20 @@ export function Page({
             {right ?? (!tabs ? <View style={{ width: 48 }} /> : null)}
           </View>
           {subtitle ? (
-            <Text style={[ui.body, ui.center, { marginTop: 14, marginBottom: 24 }]}>
+            <Text
+              style={[
+                ui.body,
+                ui.center,
+                {
+                  marginTop: narrow ? 8 : 14,
+                  marginBottom: narrow ? 18 : 24,
+                  maxWidth: width - horizontalPadding * 2,
+                  alignSelf: 'center',
+                },
+              ]}
+              allowFontScaling
+              maxFontSizeMultiplier={fontScale > 1.3 ? 1.15 : 1.25}
+            >
               {subtitle}
             </Text>
           ) : (
