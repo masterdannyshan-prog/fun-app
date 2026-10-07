@@ -51,7 +51,7 @@ export default function CameraScreen() {
     }, []),
   );
   async function take() {
-    if (!ready || !camera.current || busy) return;
+    if (!camera.current || busy || (Platform.OS !== 'web' && !ready)) return;
     setBusy(true);
     setMessage('');
     try {
@@ -68,14 +68,9 @@ export default function CameraScreen() {
           setCaptured(photo);
           break;
         } catch (error) {
-          if (
-            Platform.OS !== 'web' ||
-            !(error instanceof Error) ||
-            !('code' in error) ||
-            error.code !== 'ERR_CAMERA_NOT_READY' ||
-            attempt === 9
-          )
-            throw error;
+          if (Platform.OS !== 'web' || attempt === 9) throw error;
+          // Browsers can grant permission before the video element has produced
+          // its first frame. Keep trying briefly instead of leaving capture disabled.
           await new Promise((resolve) => setTimeout(resolve, 150));
         }
       }
